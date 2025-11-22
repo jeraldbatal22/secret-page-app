@@ -13,6 +13,20 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  {
+    // plugins: {
+    //   prettier: eslintPluginPrettier,
+    // },
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_", // 👈 ignore args starting with "_"
+        },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;

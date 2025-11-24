@@ -1,7 +1,7 @@
 "use client";
 
 import MainLayout from "@/components/layout";
-import { AuthForm } from "@/components/modals/auth-form";
+import { AuthForm } from "@/components/forms/auth-form";
 import { useAppSelector } from "@/lib/hooks";
 
 export default function HomePage() {

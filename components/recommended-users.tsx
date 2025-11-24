@@ -15,6 +15,7 @@ import { supabaseClient } from "@/utils/supabase/client";
 import { setProfiles } from "@/lib/slices/user-slice";
 import { showToast } from "@/lib/utils";
 import type { Profile } from "@/types";
+import { useRealtimeFriendRequests } from "./hooks/use-realtime-friend-requests";
 
 const RecommendedUsers = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -31,7 +32,7 @@ const RecommendedUsers = () => {
         .select("friend_id")
         .eq("user_id", user.id);
 
-      const friendIds = friends?.map((f) => f.friend_id) ?? [];
+        const friendIds = friends?.map((f) => f.friend_id) ?? [];
 
       // 2. Build query
       let query = supabase.from("profiles").select("*").neq("id", user.id);
@@ -54,6 +55,10 @@ const RecommendedUsers = () => {
       }
     }
   };
+
+  useRealtimeFriendRequests({
+    onFriendRequestsChange: fetchRecommendedUsers,
+  });
 
   useEffect(() => {
     fetchRecommendedUsers();

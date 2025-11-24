@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect } from "react";
-import { Navigation } from "./navigation";
 import { supabaseClient } from "@/utils/supabase/client";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { logout, setCredentials } from "@/lib/slices/auth-slice";
 import { useRouter } from "next/navigation";
+import HeaderNavMenu from "./header-nav-menu";
 
 const MainLayout = ({
   children,
@@ -50,10 +50,11 @@ const MainLayout = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <div className="flex min-h-screen flex-col bg-zinc-50 font-sans dark:bg-black">
+    <div className="max-w-7xl mx-auto flex min-h-screen flex-col font-sans dark:bg-black">
       {isAuthenticated && (
-        <div className="flex justify-center px-4 pt-6 sm:pt-10">
-          <Navigation />
+        <div className="flex justify-center px-4 pt-6 sm:pt-10 w-full">
+          {/* <Navigation /> */}
+          <HeaderNavMenu />
         </div>
       )}
       <main className="flex-1 px-4 py-8 sm:px-6 lg:px-10">{children}</main>

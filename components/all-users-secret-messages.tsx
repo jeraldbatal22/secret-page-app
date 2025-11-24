@@ -18,6 +18,7 @@ import { Spinner } from "./ui/spinner";
 import { EmptyPlaceholder } from "./ui/empty-placeholder";
 import Image from "next/image";
 import type { MessageWithSender } from "@/types";
+import { useRealtimeMessages } from "./hooks/use-realtime-messages";
 
 const AllUsersSecretMessages = () => {
   const path = usePathname();
@@ -62,40 +63,14 @@ const AllUsersSecretMessages = () => {
     }
   };
 
+  useRealtimeMessages({
+    onMessagesChange: fetchAllMessages,
+  });
+  
   useEffect(() => {
     fetchAllMessages();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    const channel = supabaseClient().channel("secret-messages-channel");
-    channel
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "messages",
-        },
-        (payload) => {
-          // Only fetch if it's an insert or update event
-          if (
-            payload.eventType === "INSERT" ||
-            payload.eventType === "UPDATE"
-          ) {
-            fetchAllMessages();
-          }
-        }
-      )
-      .subscribe((status) => {
-        console.log("Subscribe ", status);
-      });
-
-    return () => {
-      channel.unsubscribe();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messages]);
 
   return (
     <section className="w-full px-4 py-6">

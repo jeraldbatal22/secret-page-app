@@ -26,6 +26,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { EmptyPlaceholder } from "./ui/empty-placeholder";
 import { supabaseClient } from "@/utils/supabase/client";
 import type { FriendWithProfiles, FriendRequestWithSender, Profile } from "@/types";
+import { useRealtimeFriends } from "./hooks/use-realtime-friends";
+import { useRealtimeFriendRequests } from "./hooks/use-realtime-friend-requests";
 
 export function FriendList() {
   const path = usePathname();
@@ -48,7 +50,7 @@ export function FriendList() {
       // Fetch friends for the authenticated user
       const { data: friends, error: friendsError } = await supabaseClient()
         .from("friends")
-        .select(`user_id(*), friend_id(*)`)
+        .select(`*, user_id(*), friend_id(*)`)
         .eq("user_id", user?.id);
 
       if (friendsError) throw friendsError;
@@ -110,6 +112,10 @@ export function FriendList() {
     }
   };
 
+  useRealtimeFriends({
+    onFriendsChange: fetchFriends,
+  });
+
   useEffect(() => {
     fetchFriends();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -129,6 +135,10 @@ export function FriendList() {
       }
     }
   };
+
+  useRealtimeFriendRequests({
+    onFriendRequestsChange: fetchFriendRequests,
+  });
 
   useEffect(() => {
     fetchFriendRequests();

@@ -97,3 +97,8 @@ Easiest deployment:
 See [Next.js deployment docs](https://nextjs.org/docs/app/building-your-application/deploying) for details.
 
 ---
+
+## Covered testing
+
+<img width="1630" height="1167" alt="image" src="https://github.com/user-attachments/assets/5d7bc9fe-9218-4665-b654-ad53028cd1ed" />
+

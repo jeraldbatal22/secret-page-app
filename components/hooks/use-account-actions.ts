@@ -46,14 +46,17 @@ export const useAccountActions = (): AccountActions => {
     if (isDeleting) return;
     setIsDeleting(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/delete-account`, {
-        // headers: { "Content-Type": "application/json" },
-        method: "POST",
-        body: JSON.stringify({ userId: user?.id }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/api/delete-account`,
+        {
+          // headers: { "Content-Type": "application/json" },
+          method: "POST",
+          body: JSON.stringify({ userId: user?.id }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const result = await res.json();
 

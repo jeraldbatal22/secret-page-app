@@ -39,6 +39,10 @@ export const useAccountActions = (): AccountActions => {
   }, [dispatch, isSigningOut]);
 
   const deleteAccount = useCallback(async () => {
+    const proceed = window.confirm(
+      "Are you sure you want to delete your account? This action is permanent and cannot be undone."
+    );
+    if (!proceed) return;
     if (isDeleting) return;
     setIsDeleting(true);
     try {

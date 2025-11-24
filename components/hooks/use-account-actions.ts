@@ -27,7 +27,7 @@ export const useAccountActions = (): AccountActions => {
     setIsSigningOut(true);
 
     try {
-      await supabaseClient().auth.signOut();
+      await supabaseClient.auth.signOut();
       dispatch(logout());
       showToast("Signed out successfully", "success");
     } catch (error) {
@@ -66,7 +66,7 @@ export const useAccountActions = (): AccountActions => {
       }
 
       // Sign out the user locally
-      await supabaseClient().auth.signOut();
+      await supabaseClient.auth.signOut();
       dispatch(logout());
       router.push("/");
       showToast("Your account has been deleted. Come back soon!", "success");

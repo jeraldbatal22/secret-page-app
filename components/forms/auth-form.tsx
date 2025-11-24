@@ -46,7 +46,7 @@ export function AuthForm() {
 
   const onLogin = async (data: AuthInput) => {
     setIsLoading(true);
-    const { error } = await supabaseClient().auth.signInWithPassword({
+    const { error } = await supabaseClient.auth.signInWithPassword({
       email: data.username,
       password: data.password,
     });
@@ -66,7 +66,7 @@ export function AuthForm() {
 
   const onRegister = async (data: AuthInput) => {
     setIsLoading(true);
-    const { error } = await supabaseClient().auth.signUp({
+    const { error } = await supabaseClient.auth.signUp({
       email: data.username.trim(),
       password: data.password.trim(),
     });
@@ -187,52 +187,16 @@ export function AuthForm() {
         </div>
 
         <div className="mt-6 flex flex-col gap-2">
-          {activeTab === "login" ? (
-            <Button
-              type="submit"
-              className="w-full text-base py-2"
-              onClick={form.handleSubmit(onLogin)}
-              disabled={isLoading}
-            >
-              {isLoading ? "Submitting..." : "Submit"}
-            </Button>
-          ) : (
-            <Button
-              type="submit"
-              className="w-full text-base py-2"
-              onClick={form.handleSubmit(onRegister)}
-              disabled={isLoading}
-            >
-              {isLoading ? "Submitting..." : "Submit"}
-            </Button>
-          )}
-          {/* <div className="text-sm text-center mt-1">
-            {activeTab === "login" ? (
-              <span>
-                Don&apos;t have an account?{" "}
-                <button
-                  className="text-violet-700 dark:text-violet-400 hover:underline font-semibold"
-                  type="button"
-                  onClick={() => setActiveTab("register")}
-                  disabled={isLoading}
-                >
-                  Register
-                </button>
-              </span>
-            ) : (
-              <span>
-                Already have an account?{" "}
-                <button
-                  className="text-violet-700 dark:text-violet-400 hover:underline font-semibold"
-                  type="button"
-                  onClick={() => setActiveTab("login")}
-                  disabled={isLoading}
-                >
-                  Login
-                </button>
-              </span>
+          <Button
+            type="submit"
+            className="w-full text-base py-2"
+            onClick={form.handleSubmit(
+              activeTab === "login" ? onLogin : onRegister
             )}
-          </div> */}
+            disabled={isLoading}
+          >
+            {isLoading ? "Submitting..." : "Submit"}
+          </Button>
         </div>
       </form>
     </Form>

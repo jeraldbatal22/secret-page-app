@@ -42,7 +42,7 @@ const UserSecretMessages = () => {
     }
     setIsLoadingSecretMessages(true);
     try {
-      const supabase = supabaseClient();
+      const supabase = supabaseClient;
       const { data, error } = await supabase
         .from("messages")
         .select(`*`)

@@ -24,7 +24,7 @@ const RecommendedUsers = () => {
 
   const fetchRecommendedUsers = async () => {
     if (user?.id) {
-      const supabase = supabaseClient();
+      const supabase = supabaseClient;
 
       // 1. Get friend IDs
       const { data: friends } = await supabase
@@ -32,7 +32,7 @@ const RecommendedUsers = () => {
         .select("friend_id")
         .eq("user_id", user.id);
 
-        const friendIds = friends?.map((f) => f.friend_id) ?? [];
+      const friendIds = friends?.map((f) => f.friend_id) ?? [];
 
       // 2. Build query
       let query = supabase.from("profiles").select("*").neq("id", user.id);
@@ -68,7 +68,7 @@ const RecommendedUsers = () => {
   const handleAddAsFriend = async (profile: Profile) => {
     // 1️⃣ First check if a pending request already exists (both directions)
     const { data: existingRequests, error: existingError } =
-      await supabaseClient()
+      await supabaseClient
         .from("friend_requests")
         .select("*")
         .or(
@@ -86,7 +86,7 @@ const RecommendedUsers = () => {
     }
 
     // 2️⃣ Insert new friend request
-    const { error } = await supabaseClient()
+    const { error } = await supabaseClient
       .from("friend_requests")
       .insert([
         {
@@ -145,7 +145,10 @@ const RecommendedUsers = () => {
               >
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
-                    <Avatar className="size-12 border border-rose-50 bg-linear-to-br from-rose-50 via-orange-50 to-amber-50">
+                    <Avatar
+                      data-testid="avatar-container"
+                      className="size-12 border border-rose-50 bg-linear-to-br from-rose-50 via-orange-50 to-amber-50"
+                    >
                       <AvatarImage src={profile.avatar_url} />
                       <AvatarFallback className="text-sm font-semibold text-rose-600">
                         {profile?.nickname

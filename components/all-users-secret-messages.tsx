@@ -38,7 +38,7 @@ const AllUsersSecretMessages = () => {
   const fetchAllMessages = async () => {
     setIsLoadingMessages(true);
     try {
-      const supabase = supabaseClient();
+      const supabase = supabaseClient;
       const { data: fetchedMessages, error } = await supabase
         .from("messages")
         .select(`*, sender_id(*)`)

@@ -1,6 +1,6 @@
 "use client";
 import AllUsersSecretMessages from "@/components/all-users-secret-messages";
-import { FriendList } from "@/components/friend-list";
+import Friends from "@/components/friends";
 import RecommendedUsers from "@/components/recommended-users";
 import UserSecretMessages from "@/components/user-secret-messages";
 import { useAppSelector } from "@/lib/hooks";
@@ -10,7 +10,7 @@ const SecretPageThree = () => {
   return (
     <div className="flex w-full flex-col gap-8 xl:flex-row xl:items-start">
       <div className="w-full xl:max-w-md space-y-5">
-        <FriendList />
+        <Friends />
         <RecommendedUsers />
       </div>
       <div className="w-full flex-1">

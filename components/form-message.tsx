@@ -29,7 +29,7 @@ const FormMessage = () => {
     if (!inputMessage.trim()) return;
 
     try {
-      const supabase = supabaseClient(); // assume already instantiated
+      const supabase = supabaseClient; // assume already instantiated
 
       // Upload image if present
       let imageUrl: string | null = null;

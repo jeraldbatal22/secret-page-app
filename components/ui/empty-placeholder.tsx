@@ -30,7 +30,7 @@ const EmptyPlaceholder = ({
       ) : null}
 
       <div className="space-y-1">
-        <p className="text-base font-semibold text-slate-800">{title}</p>
+        <h1 className="text-base font-semibold text-slate-800">{title}</h1>
         {description ? (
           <p className="text-sm text-slate-500">{description}</p>
         ) : null}

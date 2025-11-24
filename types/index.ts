@@ -35,6 +35,7 @@ export interface Friend {
 }
 
 export interface FriendWithProfiles extends Omit<Friend, "user_id" | "friend_id"> {
+  id?: string;
   user_id: Profile;
   friend_id: Profile;
 }

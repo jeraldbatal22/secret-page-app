@@ -1,11 +1,11 @@
 // hooks/useRealtimeSubscription.ts
 import { useEffect, useRef } from "react";
-import { supabaseClient } from "@/utils/supabase/client";
 import {
   RealtimeChannel,
   RealtimePostgresChangesPayload,
 } from "@supabase/supabase-js";
 import { useAppSelector } from "@/lib/hooks";
+import { supabaseClient } from "@/utils/supabase/client";
 
 type RealtimeEvent = "INSERT" | "UPDATE" | "DELETE" | "*";
 
@@ -51,14 +51,13 @@ export function useRealtimeSubscription<
 
   useEffect(() => {
     if (!enabled) return;
-
-    const channel = supabaseClient().channel(
+  
+    const channel = supabaseClient.channel(
       channelName || `realtime-${table}-${Date.now()}`
     );
-
+  
     channel
       .on(
-        // fix: Use correct event type for supabase-js v2 API
         "postgres_changes" as any,
         {
           event,
@@ -68,8 +67,7 @@ export function useRealtimeSubscription<
         },
         (payload: RealtimePostgresChangesPayload<T>) => {
           const { eventType } = payload;
-
-          // Call specific event handlers
+  
           if (eventType === "INSERT" && callbacksRef.current.onInsert) {
             callbacksRef.current.onInsert(payload);
           } else if (eventType === "UPDATE" && callbacksRef.current.onUpdate) {
@@ -77,8 +75,7 @@ export function useRealtimeSubscription<
           } else if (eventType === "DELETE" && callbacksRef.current.onDelete) {
             callbacksRef.current.onDelete(payload);
           }
-
-          // Call generic onChange handler
+  
           if (callbacksRef.current.onChange) {
             callbacksRef.current.onChange(payload);
           }
@@ -91,7 +88,7 @@ export function useRealtimeSubscription<
           console.error(`❌ Error subscribing to ${table}`);
         }
       });
-
+  
     channelRef.current = channel;
     return () => {
       console.log(`🔌 Unsubscribing from ${table}`);

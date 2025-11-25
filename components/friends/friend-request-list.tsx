@@ -15,6 +15,7 @@ import { Handshake } from "lucide-react";
 import { FriendRequestWithSender } from "@/types";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
+import { showToast } from "@/lib/utils";
 
 const FriendRequestList = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -44,6 +45,45 @@ const FriendRequestList = () => {
     fetchFriendRequests();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
+
+  const handleAcceptFriendRequest = async (
+    profile: FriendRequestWithSender
+  ) => {
+    // 1️⃣ Get the friend request first
+    const { data: request, error: fetchError } = await supabaseClient
+      .from("friend_requests")
+      .select("*")
+      .eq("id", profile.id)
+      .single();
+
+    if (fetchError) showToast(fetchError.message, "error");
+    if (!request) showToast("Friend request not found", "error");
+
+    const { sender_id, receiver_id, status } = request;
+
+    if (status === "accepted") {
+      return showToast("Friend request already accepted", "error");
+    }
+
+    // 2️⃣ Update friend request to accepted
+    const { error: updateError } = await supabaseClient
+      .from("friend_requests")
+      .update({ status: "accepted" })
+      .eq("id", profile.id);
+
+    if (updateError) showToast(updateError.message, "error");
+
+    // 3️⃣ Add friendship in friends table (both directions)
+    // Optionally, you can only store one row if you enforce bidirectional uniqueness
+    const { error: friendError } = await supabaseClient.from("friends").insert([
+      { user_id: sender_id, friend_id: receiver_id },
+      { user_id: receiver_id, friend_id: sender_id }, // optional, if you want both directions
+    ]);
+
+    if (friendError) showToast(friendError.message, "error");
+
+    return showToast("Friend request accepted", "success");
+  };
 
   return (
     <Card className="border-none bg-linear-to-b from-white to-rose-50/40">
@@ -102,7 +142,7 @@ const FriendRequestList = () => {
                     </div>
                     <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:gap-3">
                       <Button
-                        // onClick={() => handleAcceptFriendRequest(friend)}
+                        onClick={() => handleAcceptFriendRequest(friend)}
                         className="w-full rounded-2xl bg-linear-to-r from-violet-500 to-indigo-500 text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:from-violet-600 hover:to-indigo-600 sm:w-auto"
                         variant="secondary"
                       >

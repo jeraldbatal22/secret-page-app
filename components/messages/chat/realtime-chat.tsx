@@ -124,7 +124,7 @@ export const RealtimeChat = () => {
     <div className="w-full px-4 ">
       <Button
         variant="outline"
-        className="mb-3"
+        className="my-3"
         onClick={handleBackToAll}
         type="button"
       >

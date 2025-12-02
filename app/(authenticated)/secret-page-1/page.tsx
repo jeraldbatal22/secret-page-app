@@ -1,7 +1,7 @@
-import AllUsersSecretMessages from "@/components/all-users-secret-messages";
+import UsersSecretMessages from "@/components/messages/users-secret-messages";
 
 const SecretPageOne = () => {
-  return <AllUsersSecretMessages />;
+  return <UsersSecretMessages />;
 };
 
 export default SecretPageOne;

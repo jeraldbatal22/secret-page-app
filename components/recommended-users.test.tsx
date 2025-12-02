@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import ReduxProvider from "@/lib/providers/ReduxProvider";
+import ReduxProvider from "@/lib/providers/redux-provider";
 import RecommendedUsers from "./recommended-users";
 
 // Mock profiles data

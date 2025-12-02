@@ -15,15 +15,16 @@ const MainLayout = ({
   const router = useRouter();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
-  const fetchSession = async () => {
-    await supabaseClient.auth.getSession();
-  };
+  // const fetchSession = async () => {
+  //   const session = await supabaseClient.auth.getSession();
+  //   console.log(session, 'asdasd')
+  // };
 
   useEffect(() => {
-    fetchSession();
+    // fetchSession();
 
     const { data: authListener } = supabaseClient.auth.onAuthStateChange(
-      (_event, session) => {
+      async (_event, session) => {
         if (!session) {
           router.push("/");
           dispatch(logout());

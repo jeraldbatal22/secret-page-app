@@ -64,7 +64,8 @@ const FormMessage = () => {
       setMessageImage(null);
       setInputMessage("");
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to save message";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to save message";
       showToast(errorMessage, "error");
     }
   };
@@ -105,48 +106,57 @@ const FormMessage = () => {
   }, [selectedMessage?.content]);
 
   return (
-    <section className="w-full px-4 py-8">
-      <Card className=" mx-auto w-full max-w-3xl border-none bg-white/80 shadow-xl backdrop-blur">
-        <CardHeader className="space-y-2">
-          <CardTitle className="text-2xl">
-            Create or udpate your own secret message
+    <section className="w-full px-2 sm:px-4 py-6 mb sm:py-8">
+      <Card className="mx-auto w-full max-w-lg sm:max-w-2xl md:max-w-3xl border-none bg-white shadow-xl backdrop-blur">
+        <CardHeader className="space-y-1 sm:space-y-2 px-2 sm:px-6 pt-0 md:pt-7 sm:pt-9">
+          <CardTitle className="text-md sm:text-2xl text-center md:my-0 my-2">
+            Create or update your own secret message
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="grid gap-8 ">
+        <CardContent className="grid gap-6 sm:gap-8 px-2 sm:px-6">
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col gap-4 rounded-3xl border border-slate-100 bg-linear-to-b from-slate-50 to-white/80 p-5 shadow-[0_18px_55px_-45px_rgba(15,23,42,0.6)]"
+            className="flex flex-col gap-4 sm:gap-6 rounded-2xl sm:rounded-3xl p-3 sm:p-5"
           >
             <div className="flex flex-col gap-2">
-              <Label htmlFor="message">Message</Label>
+              <Label htmlFor="message" className="text-sm sm:text-base">
+                Message
+              </Label>
               <Textarea
                 id="message"
                 value={inputMessage}
                 onChange={(event) => setInputMessage(event.target.value)}
                 placeholder="Tell your story..."
-                className="min-h-[120px] resize-none"
+                className="min-h-[96px] sm:min-h-[120px] resize-none text-sm sm:text-base"
               />
             </div>
 
             {!selectedMessage && (
               <div className="flex flex-col gap-2">
-                <Label htmlFor="image">Image</Label>
-                <Input id="image" type="file" onChange={handleFileChange}/>
+                <Label htmlFor="image" className="text-sm sm:text-base">
+                  Image
+                </Label>
+                <Input
+                  id="image"
+                  type="file"
+                  onChange={handleFileChange}
+                  className="file:text-xs sm:file:text-base"
+                />
               </div>
             )}
 
-            <div className="mt-2 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-2 flex flex-col gap-2 sm:gap-3 sm:flex-row">
               <Button
                 type="submit"
                 disabled={!inputMessage?.trim() || isLoading}
-                className="flex-1 rounded-full py-5 text-base font-semibold relative"
+                className="flex-1 rounded-full py-2 sm:py-5 font-semibold relative text-sm sm:text-base"
               >
                 {isLoading ? (
                   <Spinner />
                 ) : (
                   <>
-                    {selectedMessage?.id ? "Update" : "Save"}
+                    {selectedMessage?.id ? "Update" : "Send"}
                     <Send className="ml-2 size-4" />
                   </>
                 )}
@@ -156,7 +166,7 @@ const FormMessage = () => {
                 <Button
                   type="button"
                   variant="outline"
-                  className="flex-1 rounded-full py-5 text-base font-semibold"
+                  className="flex-1 rounded-full py-4 sm:py-5 text-base font-semibold"
                   onClick={handleCancelEdit}
                 >
                   Cancel edit

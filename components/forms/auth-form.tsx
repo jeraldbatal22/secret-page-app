@@ -12,14 +12,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "../ui/spinner";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { supabaseClient } from "@/utils/supabase/client";
 import { showToast } from "@/lib/utils";
+import { loginAction, registerAction } from "./action";
 
 // Zod schema for form
 const authSchema = z.object({
-  username: z
+  email: z
     .email({ message: "Valid email required" })
     .trim()
     .min(1, "Email is required"),
@@ -32,55 +31,47 @@ export function AuthForm() {
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
   const [isLoading, setIsLoading] = useState(false);
 
-  const router = useRouter();
   const form = useForm<AuthInput>({
     resolver: zodResolver(authSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
-    mode: "onChange",
+    mode: "all",
   });
 
   const { setError } = form;
 
-  const onLogin = async (data: AuthInput) => {
-    setIsLoading(true);
-    const { error } = await supabaseClient.auth.signInWithPassword({
-      email: data.username,
-      password: data.password,
-    });
+  const handleLogin = async (values: AuthInput) => {
+    setIsLoading(true)
 
-    if (error) {
+    const { error } = await loginAction(values);
+
+    if (error.message) {
       showToast(error.message, "error");
-      if (error?.message?.toLowerCase().includes("email")) {
-        setError("username", { message: "Invalid email or password" });
+      if (error.message?.toLowerCase().includes("email")) {
+        setError("email", { message: "Invalid email or password" });
       } else {
         setError("password", { message: error.message });
       }
-    } else {
-      router.push("/secret-page-1");
     }
-    setIsLoading(false);
+    setIsLoading(false)
   };
 
-  const onRegister = async (data: AuthInput) => {
+  const handleRegister = async (values: AuthInput) => {
     setIsLoading(true);
-    const { error } = await supabaseClient.auth.signUp({
-      email: data.username.trim(),
-      password: data.password.trim(),
-    });
+    const { error } = await registerAction(values);
 
     if (error) {
       showToast(error.message, "error");
-      setError("username", { message: error.message });
+      setError("email", { message: error.message });
     } else {
       showToast(
         "Registration successful! Please check your email to confirm your account before logging in.",
         "success"
       );
       setActiveTab("login");
-      form.reset({ username: data.username, password: "" });
+      form.reset({ email: values.email, password: "" });
     }
     setIsLoading(false);
   };
@@ -138,28 +129,31 @@ export function AuthForm() {
         <div className="grid gap-5">
           <FormField
             control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="username" className="text-base">
-                  Email
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    id="username"
-                    autoFocus
-                    autoComplete="username"
-                    placeholder="Enter your email address"
-                    type="email"
-                    inputMode="email"
-                    className="font-medium"
-                    disabled={isLoading}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            name="email"
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel htmlFor="email" className="text-base">
+                    Email
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      data-testid="input-email"
+                      id="email"
+                      autoFocus
+                      autoComplete="email"
+                      placeholder="Enter your email address"
+                      type="email"
+                      inputMode="email"
+                      className="font-medium"
+                      disabled={isLoading}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )
+            }}
           />
 
           <FormField
@@ -191,7 +185,7 @@ export function AuthForm() {
             type="submit"
             className="w-full text-base py-2"
             onClick={form.handleSubmit(
-              activeTab === "login" ? onLogin : onRegister
+              activeTab === "login" ? handleLogin : handleRegister
             )}
             disabled={isLoading}
           >

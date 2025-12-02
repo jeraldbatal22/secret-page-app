@@ -1,3 +1,22 @@
+export interface I_Error {
+  code: string;
+  details: string | null;
+  hint: string;
+  message: string;
+}
+
+export type Result<T> =
+  | { success: true; data: T }
+  | { success: false; error: string; code?: string };
+
+export interface I_Response_Result {
+  error: I_Error | null;
+  data: any[];
+  count: number | null;
+  status: number;
+  statusText: string;
+}
+
 // Database entity types
 export interface Profile {
   id: string;
@@ -17,10 +36,19 @@ export interface Message {
   selectedFriend?: {
     name: string;
   };
+  friendship_status:
+    | "self"
+    | "none"
+    | "pending"
+    | "accepted"
+    | "friends"
+    | "pending_sent"
+    | "pending_received";
 }
 
 export interface MessageWithSender extends Omit<Message, "sender_id"> {
   sender_id: Profile;
+  receiver_id?: Profile | null;
 }
 
 export interface Friend {
@@ -34,10 +62,12 @@ export interface Friend {
   status?: "pending" | "accepted";
 }
 
-export interface FriendWithProfiles extends Omit<Friend, "user_id" | "friend_id"> {
+export interface FriendWithProfiles
+  extends Omit<Friend, "user_id" | "friend_id"> {
   id?: string;
   user_id: Profile;
   friend_id: Profile;
+  type?: "view-profile" | "view-chat" | "view-secret-message";
 }
 
 export interface FriendRequest {
@@ -48,7 +78,8 @@ export interface FriendRequest {
   created_at?: string;
 }
 
-export interface FriendRequestWithSender extends Omit<FriendRequest, "sender_id"> {
+export interface FriendRequestWithSender
+  extends Omit<FriendRequest, "sender_id"> {
   sender_id: Profile;
 }
 
@@ -81,7 +112,13 @@ export interface ToastOptions {
   title?: string;
   description?: string;
   richColors?: boolean;
-  position?: "top-center" | "top-left" | "top-right" | "bottom-center" | "bottom-left" | "bottom-right";
+  position?:
+    | "top-center"
+    | "top-left"
+    | "top-right"
+    | "bottom-center"
+    | "bottom-left"
+    | "bottom-right";
   duration?: number;
 }
 
@@ -99,4 +136,3 @@ export interface SupabaseSession {
   expires_in?: number;
   token_type?: string;
 }
-

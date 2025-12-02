@@ -1,4 +1,4 @@
-import ReduxProvider from "@/lib/providers/ReduxProvider";
+import ReduxProvider from "@/lib/providers/redux-provider";
 import { render, RenderOptions } from "@testing-library/react";
 import { ReactNode } from "react";
 

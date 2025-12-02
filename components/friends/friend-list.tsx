@@ -21,6 +21,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { EmptyPlaceholder } from "../ui/empty-placeholder";
 import type { FriendWithProfiles, Profile } from "@/types";
 import { useRealtimeFriends } from "../hooks/use-realtime-friends";
+import { Button } from "../ui/button";
 
 export function FriendList() {
   const path = usePathname();
@@ -30,8 +31,11 @@ export function FriendList() {
   );
   const { user } = useAppSelector((state) => state.auth);
 
-  const onHandleSelectUserFriend = (friend: FriendWithProfiles) => {
-    dispatch(setSelectedFriend(friend));
+  const onHandleViewSelectUserFriend = (
+    friend: FriendWithProfiles,
+    selectedType: string
+  ) => {
+    dispatch(setSelectedFriend({ ...friend, type: selectedType as any }));
   };
 
   const canSelectFriend = path === "/secret-page-3";
@@ -93,6 +97,7 @@ export function FriendList() {
             .from("messages")
             .select("*")
             .or(`and(sender_id.eq.${friendId})`)
+            .is("receiver_id", null)
             .order("created_at", { ascending: false });
 
           if (messagesError) throw messagesError;
@@ -143,18 +148,10 @@ export function FriendList() {
               return (
                 <article
                   key={friend.id ?? index}
-                  role="button"
                   tabIndex={canSelectFriend ? 0 : -1}
-                  onClick={
-                    canSelectFriend
-                      ? () => onHandleSelectUserFriend(friend)
-                      : undefined
-                  }
                   className={cn(
                     "group flex items-center justify-between gap-4 rounded-3xl border bg-white/90 p-4 text-left shadow-[0_15px_45px_-35px_rgba(15,23,42,0.65)] transition-all duration-200",
-                    canSelectFriend
-                      ? "cursor-pointer hover:-translate-y-0.5 hover:border-violet-200/70 hover:shadow-[0_18px_55px_-35px_rgba(109,40,217,0.6)]"
-                      : "cursor-default",
+
                     friend?.friend_id?.id === selectedFriend?.friend_id?.id
                       ? "border-violet-200 bg-violet-50/70"
                       : "border-slate-100"
@@ -187,12 +184,38 @@ export function FriendList() {
                   <div className="flex flex-col items-end gap-2">
                     <Badge
                       variant="outline"
-                      className="border-violet-200 bg-violet-50/80 text-xs font-semibold text-violet-700"
+                      onClick={
+                        canSelectFriend
+                          ? () =>
+                              onHandleViewSelectUserFriend(
+                                friend,
+                                "view-secret-message"
+                              )
+                          : undefined
+                      }
+                      className={cn(
+                        canSelectFriend
+                          ? "cursor-pointer hover:-translate-y-0.5 hover:border-violet-200/70 hover:shadow-[0_18px_55px_-35px_rgba(109,40,217,0.6)]"
+                          : "cursor-default",
+                        "border-violet-200 bg-violet-50/80 text-xs font-semibold text-violet-700 hover:bg-violet-100"
+                      )}
                     >
                       <MessageCircle className="mr-1 size-3.5" />
                       {friend.messagesCount ?? 0}{" "}
                       {(friend.messagesCount ?? 0) === 1 ? "secret" : "secrets"}
                     </Badge>
+                    {user?.id !== friend?.friend_id?.id && (
+                      <Button
+                        variant="default"
+                        className="text-[10px] hover:-translate-y-0.5 hover:border-violet-200/70 hover:shadow-[0_18px_55px_-35px_rgba(109,40,217,0.6)] h-7 cursor-pointer hover:bg-violet-100 dark:hover:bg-violet-900 bg-violet-200 dark:bg-violet-900 font-semibold text-violet-900 dark:text-white"
+                        onClick={() =>
+                          onHandleViewSelectUserFriend(friend, "view-chat")
+                        }
+                        type="button"
+                      >
+                        Chat
+                      </Button>
+                    )}
                   </div>
                 </article>
               );

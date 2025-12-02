@@ -13,6 +13,7 @@ beforeEach(() => {
 
 // Basic user and secretMessage mocks
 const mockUser = { id: "test-user", email: "user@test.com" };
+    // @ts-expect-error: Explicitly allowing null to simulate no selected message for test
 const mockSelectedMessage: Message | null = {
   id: "msg-123",
   content: "This is a test message",
@@ -111,7 +112,6 @@ describe("FormMessage", () => {
 
   beforeEach(() => {
     // reset all mocks and message state
-    // @ts-expect-error: Explicitly allowing null to simulate no selected message for test
     currentMockSelectedMessage = null;
     insertFn.mockClear();
     updateFn.mockClear();
@@ -120,7 +120,6 @@ describe("FormMessage", () => {
   });
 
   it("renders form title and empty message input for new message", () => {
-    // @ts-expect-error: Explicitly allowing null to simulate no selected message for test
     currentMockSelectedMessage = null; // <-- ensure new message state
     render(<FormMessage />);
 
@@ -145,7 +144,7 @@ describe("FormMessage", () => {
     render(<FormMessage />);
 
     const textarea = screen.getByLabelText(/message/i) as HTMLTextAreaElement;
-    expect(textarea.value).toBe(currentMockSelectedMessage.content);
+    expect(textarea.value).toBe(currentMockSelectedMessage?.content);
     // Image upload should not be rendered in edit mode
     expect(screen.queryByLabelText(/image/i)).not.toBeInTheDocument();
 
@@ -157,7 +156,6 @@ describe("FormMessage", () => {
   });
 
   it("does not submit when message is blank", async () => {
-    // @ts-expect-error: Explicitly allowing null to simulate no selected message for test
     currentMockSelectedMessage = null; // ensure "Save" button shows
     render(<FormMessage />);
 
@@ -170,7 +168,6 @@ describe("FormMessage", () => {
   });
 
   it("calls insert on submit with message and clears form", async () => {
-    // @ts-expect-error: Explicitly allowing null to simulate no selected message for test
     currentMockSelectedMessage = null;
 
     render(<FormMessage />);
@@ -212,7 +209,6 @@ describe("FormMessage", () => {
   });
 
   it("uploads image and attaches url if file selected (new message)", async () => {
-    // @ts-expect-error: Explicitly allowing null to simulate no selected message for test
     currentMockSelectedMessage = null;
 
     render(<FormMessage />);

@@ -29,9 +29,18 @@ describe("AuthForm", () => {
 
   it("renders email input with correct placeholder", () => {
     render(<AuthForm />);
-    const emailInput = screen.getByPlaceholderText(/enter your email address/i);
-    expect(emailInput).toBeInTheDocument();
+    // const emailInput = screen.getByPlaceholderText(/enter your email address/i);
+    const emailInput = screen.getByTestId("input-email");
+    // Extract the placeholder text and trim any extra whitespace
+    const placeholderValue = emailInput?.getAttribute("placeholder")?.trim();
+
+    expect(placeholderValue).toMatch(/enter your email address/i);
+
+    // Check type
     expect(emailInput).toHaveAttribute("type", "email");
+
+    // Check test-id
+    expect(emailInput).toHaveAttribute("data-testid", "input-email");
   });
 
   it("renders password input with correct placeholder", () => {
